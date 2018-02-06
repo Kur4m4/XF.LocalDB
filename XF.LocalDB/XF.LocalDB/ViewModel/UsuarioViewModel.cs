@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
-using System.Xml.Linq;
 using Xamarin.Forms;
 using XF.LocalDB.Model;
 using XF.LocalDB.View.Aluno;
@@ -24,18 +23,9 @@ namespace XF.LocalDB.ViewModel
 
         private void OnLogin()
         {
-            bool invalidUser = true;
-            var usuarios = XDocument.Load("http://wopek.com.spiraea.arvixe.com/xml/usuarios.xml").Descendants("usuario");
-
-            foreach (var usuario in usuarios)
-            {
-                if (Usuario.Username == usuario.Element("username").Value && Usuario.Password == usuario.Element("password").Value)
-                {
-                    invalidUser = false;
-                    App.Current.MainPage.Navigation.PushAsync(new MainPage() { BindingContext = App.AlunoVM });
-                }
-            }
-            if (invalidUser)
+            if(Usuario.IsValidUser(Usuario))
+                App.Current.MainPage.Navigation.PushAsync(new MainPage() { BindingContext = App.AlunoVM });
+            else
                 App.Current.MainPage.DisplayAlert("Usuário inválido", "Usuário e/ou senha incorreto(s)", "OK");
         }
     }
